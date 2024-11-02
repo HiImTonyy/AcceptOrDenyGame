@@ -49,6 +49,7 @@ namespace AcceptOrDenyLibrary
 
             do
             {
+                Console.Clear();
                 NPC npc = new NPC().GenerateNPC();
 
                 HeaderScreen(work);

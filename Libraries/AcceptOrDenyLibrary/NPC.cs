@@ -88,6 +88,22 @@ namespace AcceptOrDenyLibrary
             get { return isIllegal; }
             set { isIllegal = value; }
         }
+        public int ExpirationMonth
+        {
+            get { return expirationMonth; }
+            set { expirationMonth = value; }
+        }
+        public int ExpirationDay
+        {
+            get { return expirationDay; }
+            set { expirationDay = value; }
+        }
+
+        public int ExpirationYear
+        {
+            get { return expirationYear; }
+            set { expirationYear = value; }
+        }
 
         public NPC GenerateNPC()
         {
@@ -397,7 +413,9 @@ namespace AcceptOrDenyLibrary
 
             int selectStreetDirection = Logic.CreateRandomNumber(0, 4);
 
+            DateTime date = DateTime.Now;
             npc.isIllegal = MakeIllegal();
+            SetIDExperation(date, npc);
 
             npc.FirstName = firstName[selectFirstName];
             npc.LastName = lastName[selectLastName];
@@ -445,14 +463,69 @@ namespace AcceptOrDenyLibrary
 
         public static void ShowNpcID(NPC npc)
         {
+            Console.WriteLine(npc.IsIllegal);
             Console.WriteLine("ID GIVEN");
             Console.WriteLine("--------");
             Console.WriteLine($"First Name: {npc.FirstName}");
             Console.WriteLine($"Last Name: {npc.LastName}");
             Console.WriteLine($"Birthday: {npc.BirthMonth}/{npc.BirthDay}/{npc.BirthYear}");
             Console.WriteLine($"Gender: {npc.Gender}");
-            Console.WriteLine($"Home Address: {npc.StreetNumber} {npc.StreetAddress} {npc.StreetDirection}");
-            Console.WriteLine($"Expiration Date: ");
+            Console.WriteLine($"Home Address: {npc.StreetNumber} {npc.StreetAddress} street {npc.StreetDirection}");
+            Console.WriteLine($"Expiration Date: {npc.ExpirationMonth}/{npc.ExpirationDay}/{npc.ExpirationYear}");
+        }
+
+        public static void SetIDExperation(DateTime date, NPC npc)
+        {
+            // Set expiration date.
+            do
+            {
+                npc.ExpirationMonth = Logic.CreateRandomNumber(1, 11);
+                npc.ExpirationDay = Logic.CreateRandomNumber(1, 29);
+                npc.ExpirationYear = date.Year + Logic.CreateRandomNumber(1, 3);
+            } while (npc.ExpirationMonth > 12 || npc.ExpirationDay > 30);
+
+            // If NPC is illegal, randomly choose one of the dates and subtract it to make it expired.
+            if (npc.isIllegal == true)
+            {
+                do
+                {
+                    int randomRoll = Logic.CreateRandomNumber(1, 4);
+
+                    switch (randomRoll)
+                    {
+                        case 1:
+                            npc.ExpirationMonth = date.Month - Logic.CreateRandomNumber(1, 11);
+                            // To make sure it is current year... 
+                            npc.ExpirationYear = date.Year;
+                            break;
+                        case 2:
+                            npc.ExpirationDay = date.Day - Logic.CreateRandomNumber(1, 29);
+                            break;
+                        case 3:
+                            npc.ExpirationYear = date.Year - Logic.CreateRandomNumber(1, 3);
+                            break;
+                    }
+                } while (npc.expirationMonth < 1 || npc.expirationDay < 1);
+            }
         }
     }
 }
+
+/*LETTERS TO CHANGE INTO IF NAME IS SELECTED ERROR IN ORDER TO FOOL PLAYER
+ * B - 8
+D - O 
+E - 3 
+G - 6 
+H - N 
+I - 1 / l
+O - 0 
+S - 5 
+U - V 
+V - Y 
+Z - 2
+
+TODO: 
+
+SELECT THE ILLEGAL TYPE (MAKE THE ERROR FIRST NAME OR LAST NAME OR EXPIRATION DATE, ETC)
+*/
+
