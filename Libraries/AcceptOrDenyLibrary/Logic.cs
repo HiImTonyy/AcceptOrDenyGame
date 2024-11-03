@@ -14,5 +14,24 @@ namespace AcceptOrDenyLibrary
             int numberSelected = random.Next(minNumber, maxNumber);
             return numberSelected;
         }
+
+        public enum IDErrorType
+        {
+            FirstName = 1,
+            LastName,
+            Birthday,
+            Gender,
+            StreetAddress,
+            StreetNumber,
+            StreetDirection,
+            ExpirationDate
+        }
+
+        public static string RemoveLetter(string name)
+        {
+            int index = Logic.CreateRandomNumber(1, name.Length - 1);
+            name = name.Remove(index, 1);
+            return name;
+        }
     }
 }

@@ -51,9 +51,16 @@ namespace AcceptOrDenyLibrary
             {
                 Console.Clear();
                 NPC npc = new NPC().GenerateNPC();
+                NPC npcComputerInfo = new NPC(npc);
+
+                if (npc.IsIllegal) {NPC.SelectIDError(npc); }
 
                 HeaderScreen(work);
+
+                ShowMonitor(npcComputerInfo);
+                Console.WriteLine("\n");
                 NPC.ShowNpcID(npc);
+
                 Console.ReadLine();
             } while (true);
         }
@@ -65,6 +72,20 @@ namespace AcceptOrDenyLibrary
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"People in line: {work.lineupCount}\tCurrent Day: {localDate.Month}/{localDate.Day}/{localDate.Year}");
             Console.WriteLine("-----------------------------------------------\n");
+            Console.ResetColor();
+        }
+
+        public static void ShowMonitor(NPC npcComputerInfo)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine("COMPUTER SCREEN");
+            Console.WriteLine("---------------");
+            Console.WriteLine($"First Name: {npcComputerInfo.FirstName}");
+            Console.WriteLine($"Last Name: {npcComputerInfo.LastName}");
+            Console.WriteLine($"Birthday: {npcComputerInfo.BirthMonth}/{npcComputerInfo.BirthDay}/{npcComputerInfo.BirthYear}");
+            Console.WriteLine($"Gender: {npcComputerInfo.Gender}");
+            Console.WriteLine($"Home Address: {npcComputerInfo.StreetNumber} {npcComputerInfo.StreetAddress} street {npcComputerInfo.StreetDirection}");
+            Console.WriteLine($"Expiration Date: {npcComputerInfo.ExpirationMonth}/{npcComputerInfo.ExpirationDay}/{npcComputerInfo.ExpirationYear}");
             Console.ResetColor();
         }
     }

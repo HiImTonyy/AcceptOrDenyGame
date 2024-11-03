@@ -22,6 +22,7 @@ namespace AcceptOrDenyLibrary
         private int expirationDay;
         private int expirationYear;
         private bool isIllegal;
+        private int errorType;
 
         public string FirstName
         {
@@ -103,6 +104,46 @@ namespace AcceptOrDenyLibrary
         {
             get { return expirationYear; }
             set { expirationYear = value; }
+        }
+
+        public int ErrorType
+        {
+            get { return errorType; }
+            set { errorType = value; }
+        }
+
+        public NPC()
+        {
+            FirstName = this.FirstName;
+            LastName = this.LastName;
+            BirthMonth = this.BirthMonth;
+            BirthDay = this.BirthDay;
+            BirthYear = this.BirthYear;
+            Age = this.Age;
+            Gender = this.Gender;
+            StreetAddress = this.StreetAddress;
+            StreetNumber = this.StreetNumber;
+            StreetDirection = this.StreetDirection;
+            ExpirationMonth = this.ExpirationMonth;
+            ExpirationDay = this.ExpirationDay;
+            ExpirationYear = this.ExpirationYear;
+        }
+
+        public NPC(NPC npc)
+        {
+            FirstName = npc.FirstName;
+            LastName = npc.LastName;
+            BirthMonth = npc.BirthMonth;
+            BirthDay = npc.BirthDay;
+            BirthYear = npc.BirthYear;
+            Age = npc.Age;
+            Gender = npc.Gender;
+            StreetAddress = npc.StreetAddress;
+            StreetNumber = npc.StreetNumber;
+            StreetDirection = npc.StreetDirection;
+            ExpirationMonth = npc.ExpirationMonth;
+            ExpirationDay = npc.ExpirationDay;
+            ExpirationYear = npc.ExpirationYear;
         }
 
         public NPC GenerateNPC()
@@ -443,12 +484,6 @@ namespace AcceptOrDenyLibrary
             return Age;
         }
 
-        public static void SetGenderColor(NPC npc)
-        {
-            if (npc.Gender == "Male") { Console.ForegroundColor = ConsoleColor.Blue; }
-            else { Console.ForegroundColor = ConsoleColor.Magenta; }
-        }
-
         public static bool MakeIllegal()
         {
             int illegalChance = 30;
@@ -463,7 +498,8 @@ namespace AcceptOrDenyLibrary
 
         public static void ShowNpcID(NPC npc)
         {
-            Console.WriteLine(npc.IsIllegal);
+            //Console.WriteLine(npc.IsIllegal);
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("ID GIVEN");
             Console.WriteLine("--------");
             Console.WriteLine($"First Name: {npc.FirstName}");
@@ -472,6 +508,7 @@ namespace AcceptOrDenyLibrary
             Console.WriteLine($"Gender: {npc.Gender}");
             Console.WriteLine($"Home Address: {npc.StreetNumber} {npc.StreetAddress} street {npc.StreetDirection}");
             Console.WriteLine($"Expiration Date: {npc.ExpirationMonth}/{npc.ExpirationDay}/{npc.ExpirationYear}");
+            Console.ResetColor();
         }
 
         public static void SetIDExperation(DateTime date, NPC npc)
@@ -481,11 +518,11 @@ namespace AcceptOrDenyLibrary
             {
                 npc.ExpirationMonth = Logic.CreateRandomNumber(1, 11);
                 npc.ExpirationDay = Logic.CreateRandomNumber(1, 29);
-                npc.ExpirationYear = date.Year + Logic.CreateRandomNumber(1, 3);
+                npc.ExpirationYear = date.Year + Logic.CreateRandomNumber(0, 3);
             } while (npc.ExpirationMonth > 12 || npc.ExpirationDay > 30);
 
-            // If NPC is illegal, randomly choose one of the dates and subtract it to make it expired.
-            if (npc.isIllegal == true)
+            // If NPC is illegal && errortype is expiredID, randomly choose one of the dates and subtract it to make it expired.
+            if (npc.isIllegal == true && npc.ErrorType == (int)Logic.IDErrorType.ExpirationDate)
             {
                 do
                 {
@@ -507,22 +544,88 @@ namespace AcceptOrDenyLibrary
                     }
                 } while (npc.expirationMonth < 1 || npc.expirationDay < 1);
             }
+            else
+            {
+                /* This is to make it less obvious on the dates NOT being expired. It makes sure that the expired date is closer
+                 * to whatever current date it is. if expired date is of current year AND month, increase the days by X amount. 
+                 * else if it of the same year, increase the month by X amount.
+                 * (Code is complete and utter TRASH, I'M AWARE.)
+                 */
+                do
+                {
+                    if (npc.ExpirationYear == date.Year && npc.ExpirationMonth == date.Month)
+                    {
+                        npc.ExpirationDay = date.Day + Logic.CreateRandomNumber(1, 16);
+                    }
+                    else if (npc.ExpirationYear == date.Year)
+                    {
+                        npc.ExpirationMonth = date.Month + Logic.CreateRandomNumber(0, 7);
+                        // If expired day less than current date, increase expired date by X amount. 
+                        if (npc.ExpirationDay < date.Day)
+                        {
+                            npc.expirationDay = date.Day + Logic.CreateRandomNumber(1, 16);
+                        }
+                    }
+                } while (npc.ExpirationMonth > 12 || npc.ExpirationDay > 30);
+            }
+        }
+
+        public static void SelectIDError(NPC npc)
+        {
+            int roll = Logic.CreateRandomNumber(1, 3);
+            //roll = 2;
+
+            switch (roll)
+            {
+                case 1:
+                    {
+                        npc.ErrorType = (int)Logic.IDErrorType.FirstName;
+                        npc.FirstName = Logic.RemoveLetter(npc.FirstName);
+                        break;
+                    }
+                case 2:
+                    {
+                        npc.ErrorType = (int)Logic.IDErrorType.LastName;
+                        npc.LastName = Logic.RemoveLetter(npc.LastName);
+                        break;
+                    }
+                case 3:
+                    {
+                        npc.ErrorType = (int)Logic.IDErrorType.Birthday;
+                        break;
+                    }
+                case 4:
+                    {
+                        npc.ErrorType = (int)Logic.IDErrorType.Gender;
+                        break;
+                    }
+                case 5:
+                    {
+                        npc.ErrorType = (int)Logic.IDErrorType.StreetNumber;
+                        break;
+                    }
+                case 6:
+                    {
+                        npc.ErrorType = (int)Logic.IDErrorType.StreetAddress;
+                        Logic.RemoveLetter(npc.StreetAddress);
+                        break;
+                    }
+                case 7:
+                    {
+                        npc.ErrorType = (int)Logic.IDErrorType.StreetDirection;
+                        break;
+                    }
+                case 8:
+                    {
+                        npc.ErrorType = (int)Logic.IDErrorType.ExpirationDate;
+                        break;
+                    }
+            }
         }
     }
 }
 
-/*LETTERS TO CHANGE INTO IF NAME IS SELECTED ERROR IN ORDER TO FOOL PLAYER
- * B - 8
-D - O 
-E - 3 
-G - 6 
-H - N 
-I - 1 / l
-O - 0 
-S - 5 
-U - V 
-V - Y 
-Z - 2
+/*
 
 TODO: 
 

@@ -21,6 +21,7 @@ namespace AcceptOrDenyGame
 
 
                 string input = Console.ReadLine();
+                    
                 Player player = new Player();
 
                 switch (input)
