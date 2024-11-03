@@ -14,7 +14,7 @@ namespace AcceptOrDenyLibrary
         private int foodBillDate;
         private int electricityBillDate;
         private int rentBillDate;
-
+        private int ivate;
         public int FoodCost
         {
             get { return foodCost; }
