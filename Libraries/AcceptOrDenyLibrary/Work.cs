@@ -94,16 +94,15 @@ namespace AcceptOrDenyLibrary
             moneyGained = 0;
         }
 
-        public static void Working()
+        public static void Working(Work work, Player player)
         {
-            Work work = new Work();
-            Player player = new Player();
-
             do
             {
                 Console.Clear();
                 NPC npc = new NPC().GenerateNPC();
                 NPC npcComputerInfo = new NPC(npc);
+
+                Console.WriteLine($"{npc.IsIllegal}");
 
                 if (npc.IsIllegal) { NPC.SelectIDError(npc); }
                 if (npc.ErrorType == (int)Logic.IDErrorType.ExpirationDate)
@@ -218,9 +217,25 @@ namespace AcceptOrDenyLibrary
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine($"New bank balance: ${player.Money}");
+            Console.ResetColor();
             Console.WriteLine("\nPress Enter to continue...");
             Console.ReadLine();
             Bills.PayBillsScreen(player);
+
+            if (player.Money > 0)
+            {
+                Console.WriteLine("You live to work another day... Press Enter to get back to work.");
+                Console.ReadLine();
+                work.LineupCount = 10;
+                Working(work, player);
+            }
+            else
+            {
+                Console.ForegroundColor= ConsoleColor.Red;
+                Console.WriteLine("You went bankrupt! ALL IS LOST!");
+                Console.ReadLine();
+                Console.ResetColor();
+            }
         }
 
         public static void TallyUpMoney(Work work, Player player)

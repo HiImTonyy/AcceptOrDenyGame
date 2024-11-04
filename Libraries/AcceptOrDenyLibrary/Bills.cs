@@ -73,7 +73,7 @@ namespace AcceptOrDenyLibrary
             Bills bill = new Bills();
 
             DecreaseBillDates(bill);
-            Console.WriteLine($"Days till Electricity Bill: {bill.FoodBillDate}");
+            Console.WriteLine($"Days till Food Bill: {bill.FoodBillDate}");
             Console.WriteLine($"Days till Electricity Bill: {bill.ElectricityBillDate}");
             Console.WriteLine($"Days till Rent Bill: {bill.RentBillDate}\n");
 
@@ -112,6 +112,4 @@ namespace AcceptOrDenyLibrary
             player.Money = player.Money - bill.TotalBill;
         }
     }
-
-    // NEED TO ADD TOTAL MONEY GAINED TO PLAYERS MONEY AT END DAY SCREEN.. TALLY UP STUFF.
 }
