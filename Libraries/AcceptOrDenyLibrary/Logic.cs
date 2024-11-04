@@ -57,5 +57,33 @@ namespace AcceptOrDenyLibrary
 
             return number;
         }
+
+        public static string ChangeDirection(NPC npc)
+        {
+            string currentDirection = npc.StreetDirection;
+            int roll = 0;
+
+            do
+            {
+                roll = RollRandomNumber(1, 5);
+                switch (roll)
+                {
+                    case 1:
+                        npc.StreetDirection = "North";
+                        break;
+                    case 2:
+                        npc.StreetDirection = "South";
+                        break;
+                    case 3:
+                        npc.StreetDirection = "East";
+                        break;
+                    case 4:
+                        npc.StreetDirection = "West";
+                        break;
+                }
+            } while ( currentDirection == npc.StreetDirection );
+
+            return npc.StreetDirection;
+        }
     }
 }

@@ -609,7 +609,11 @@ namespace AcceptOrDenyLibrary
                 case 6:
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.Gender;
-                        // CHANGE GENDER
+                        if (npc.Gender == "Male") { npc.Gender = "Female"; }
+                        else
+                        {
+                            npc.Gender = "Male";
+                        }
                         break;
                     }
                 case 7:
@@ -627,7 +631,7 @@ namespace AcceptOrDenyLibrary
                 case 9:
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.StreetDirection;
-                        // CHANGE DIRECTION
+                        npc.StreetDirection = Logic.ChangeDirection(npc);
                         break;
                     }
                 case 10:
