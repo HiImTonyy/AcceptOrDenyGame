@@ -11,11 +11,13 @@ namespace AcceptOrDenyLibrary
         private int dayWage;
         private int currentDay;
         private int lineupCount;
-        private int bonusPayTotal;
+        private double bonusPayTotal;
         private int totalCorrectJudgements;
         private int totalIncorrectJudgements;
         private double moneyPerCorrectChoice;
         private int moneyPerWrongChoice;
+        private int moneyLost;
+        private double moneyGained;
 
 
         public int DayWage
@@ -36,7 +38,7 @@ namespace AcceptOrDenyLibrary
             set { lineupCount = value; }
         }
 
-        public int BonsuPayTotal
+        public double BonusPayTotal
         {
             get { return bonusPayTotal; }
             set { bonusPayTotal = value; }
@@ -56,14 +58,26 @@ namespace AcceptOrDenyLibrary
 
         public double MoneyPerCorrectChoice
         {
-            get { return MoneyPerCorrectChoice; }
-            set { MoneyPerCorrectChoice = value; }
+            get { return moneyPerCorrectChoice; }
+            set { moneyPerCorrectChoice = value; }
         }
 
         public int MoneyPerWrongChoice
         {
             get { return moneyPerWrongChoice; }
-            set { moneyPerCorrectChoice = value; }
+            set { moneyPerWrongChoice = value; }
+        }
+
+        public int MoneyLost
+        {
+            get { return moneyLost; }
+            set { moneyLost = value; }
+        }
+
+        public double MoneyGained
+        {
+            get { return moneyGained; }
+            set { moneyGained = value; }
         }
 
         public Work()
@@ -76,11 +90,14 @@ namespace AcceptOrDenyLibrary
             totalIncorrectJudgements = 0;
             moneyPerCorrectChoice = 0.25;
             moneyPerWrongChoice = 10;
+            moneyLost = 0;
+            moneyGained = 0;
         }
 
         public static void Working()
         {
             Work work = new Work();
+            Player player = new Player();
 
             do
             {
@@ -102,6 +119,9 @@ namespace AcceptOrDenyLibrary
 
                 MakeChoice(npc, work);
             } while (work.lineupCount > 0);
+
+            Console.Clear();
+            EndDayScreen(work, player);
         }
 
         public static void HeaderScreen(Work work)
@@ -173,6 +193,43 @@ namespace AcceptOrDenyLibrary
             Console.WriteLine($"Incorrect! the error was their {npc.ErrorTypeString}.");
             Console.ResetColor();
             work.TotalIncorrectJudgements++;
+        }
+
+        public static void EndDayScreen(Work work, Player player)
+        {
+            TallyUpMoney(work, player);
+
+            Console.WriteLine($"Days Wage: ${work.DayWage}\n");
+
+            Console.WriteLine($"Correct Judgements: {work.TotalCorrectJudgements}");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Bonus Money: ${work.bonusPayTotal}");
+            Console.ResetColor();
+            Console.WriteLine($"\nIncorrect Judgements: {work.TotalIncorrectJudgements}");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Money Docked: ${work.MoneyLost}");
+            Console.ResetColor();
+
+            if (work.MoneyGained <= 0) { Console.ForegroundColor = ConsoleColor.Red; }
+            else { Console.ForegroundColor = ConsoleColor.Green; }
+
+            Console.WriteLine($"\nTotal money gained/lost: ${work.MoneyGained}");
+            Console.ResetColor();
+
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine($"New bank balance: ${player.Money}");
+            Console.WriteLine("\nPress Enter to continue...");
+            Console.ReadLine();
+            Bills.PayBillsScreen(player);
+        }
+
+        public static void TallyUpMoney(Work work, Player player)
+        {
+            work.BonusPayTotal = work.MoneyPerCorrectChoice * work.TotalCorrectJudgements;
+            work.MoneyLost = work.MoneyPerWrongChoice * work.TotalIncorrectJudgements;
+
+            work.MoneyGained = work.DayWage + work.bonusPayTotal - work.MoneyLost;
+            player.Money = player.Money + work.MoneyGained;
         }
     }
 }

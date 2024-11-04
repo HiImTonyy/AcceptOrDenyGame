@@ -4,7 +4,7 @@
     {
         private string firstName;
         private string lastName;
-        private int money;
+        private double money;
         private int daysEmployed;
 
         public string FirstName
@@ -19,7 +19,7 @@
             set { lastName = value; }
         }
 
-        public int Money
+        public double Money
         {
             get { return money; }
             set { money = value; }
@@ -33,8 +33,8 @@
 
         public Player()
         {
-            firstName = "Josie";
-            lastName = "Wavos";
+            firstName = "Josie"; // #1!
+            lastName = "Martinez";
             money = 0;
             daysEmployed = 0;
         }
