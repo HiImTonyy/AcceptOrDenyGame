@@ -260,7 +260,7 @@ namespace AcceptOrDenyLibrary
 
             List<string> firstName = new List<string>();
 
-            int selectGenderString = Logic.CreateRandomNumber(0, 2);
+            int selectGenderString = Logic.RollRandomNumber(0, 2);
             string gender;
 
             if (selectGenderString == 0)
@@ -276,7 +276,7 @@ namespace AcceptOrDenyLibrary
 
 
 
-            int selectFirstName = Logic.CreateRandomNumber(0, 50);
+            int selectFirstName = Logic.RollRandomNumber(0, 50);
 
             List<string> lastName = new List<string>();
 
@@ -441,18 +441,18 @@ namespace AcceptOrDenyLibrary
             LikesAndDislikes.Add("Texting");
             LikesAndDislikes.Add("Working");
 
-            int selectLastName = Logic.CreateRandomNumber(0, 50);
+            int selectLastName = Logic.RollRandomNumber(0, 50);
 
-            npc.BirthMonth = Logic.CreateRandomNumber(1, 13);
-            npc.BirthDay = Logic.CreateRandomNumber(1, 31);
-            npc.Age = Logic.CreateRandomNumber(2, 89);
+            npc.BirthMonth = Logic.RollRandomNumber(1, 13);
+            npc.BirthDay = Logic.RollRandomNumber(1, 31);
+            npc.Age = Logic.RollRandomNumber(2, 89);
             npc.BirthYear = AgeToBirthdate(npc.Age);
 
-            int selectStreetNumber = Logic.CreateRandomNumber(80, 427);
+            int selectStreetNumber = Logic.RollRandomNumber(80, 427);
 
-            int selectStreetAddress = Logic.CreateRandomNumber(0, 50);
+            int selectStreetAddress = Logic.RollRandomNumber(0, 50);
 
-            int selectStreetDirection = Logic.CreateRandomNumber(0, 4);
+            int selectStreetDirection = Logic.RollRandomNumber(0, 4);
 
             DateTime date = DateTime.Now;
             npc.isIllegal = MakeIllegal();
@@ -486,8 +486,8 @@ namespace AcceptOrDenyLibrary
 
         public static bool MakeIllegal()
         {
-            int illegalChance = 30;
-            int roll = Logic.CreateRandomNumber(1, 100);
+            int illegalChance = 35;
+            int roll = Logic.RollRandomNumber(1, 101);
 
             if (roll > illegalChance)
             {
@@ -513,33 +513,33 @@ namespace AcceptOrDenyLibrary
 
         public static void SetIDExperation(DateTime date, NPC npc)
         {
-            // Set expiration date.
+            // Set expiration date. 
             do
             {
-                npc.ExpirationMonth = Logic.CreateRandomNumber(1, 11);
-                npc.ExpirationDay = Logic.CreateRandomNumber(1, 29);
-                npc.ExpirationYear = date.Year + Logic.CreateRandomNumber(0, 3);
-            } while (npc.ExpirationMonth > 12 || npc.ExpirationDay > 30);
+                npc.ExpirationMonth = Logic.RollRandomNumber(1, 11);
+                npc.ExpirationDay = Logic.RollRandomNumber(1, 29);
+                npc.ExpirationYear = date.Year + Logic.RollRandomNumber(0, 3);
+            } while (npc.ExpirationMonth > 12 || npc.ExpirationDay > 30 && (npc.ErrorType != (int)Logic.IDErrorType.ExpirationDate));
 
             // If NPC is illegal && errortype is expiredID, randomly choose one of the dates and subtract it to make it expired.
             if (npc.isIllegal == true && npc.ErrorType == (int)Logic.IDErrorType.ExpirationDate)
             {
                 do
                 {
-                    int randomRoll = Logic.CreateRandomNumber(1, 4);
+                    int randomRoll = Logic.RollRandomNumber(1, 4);
 
                     switch (randomRoll)
                     {
                         case 1:
-                            npc.ExpirationMonth = date.Month - Logic.CreateRandomNumber(1, 11);
+                            npc.ExpirationMonth = date.Month - Logic.RollRandomNumber(1, 11);
                             // To make sure it is current year... 
                             npc.ExpirationYear = date.Year;
                             break;
                         case 2:
-                            npc.ExpirationDay = date.Day - Logic.CreateRandomNumber(1, 29);
+                            npc.ExpirationDay = date.Day - Logic.RollRandomNumber(1, 29);
                             break;
                         case 3:
-                            npc.ExpirationYear = date.Year - Logic.CreateRandomNumber(1, 3);
+                            npc.ExpirationYear = date.Year - Logic.RollRandomNumber(1, 3);
                             break;
                     }
                 } while (npc.expirationMonth < 1 || npc.expirationDay < 1);
@@ -555,15 +555,15 @@ namespace AcceptOrDenyLibrary
                 {
                     if (npc.ExpirationYear == date.Year && npc.ExpirationMonth == date.Month)
                     {
-                        npc.ExpirationDay = date.Day + Logic.CreateRandomNumber(1, 16);
+                        npc.ExpirationDay = date.Day + Logic.RollRandomNumber(1, 16);
                     }
                     else if (npc.ExpirationYear == date.Year)
                     {
-                        npc.ExpirationMonth = date.Month + Logic.CreateRandomNumber(0, 7);
+                        npc.ExpirationMonth = date.Month + Logic.RollRandomNumber(0, 7);
                         // If expired day less than current date, increase expired date by X amount. 
                         if (npc.ExpirationDay < date.Day)
                         {
-                            npc.expirationDay = date.Day + Logic.CreateRandomNumber(1, 16);
+                            npc.expirationDay = date.Day + Logic.RollRandomNumber(1, 16);
                         }
                     }
                 } while (npc.ExpirationMonth > 12 || npc.ExpirationDay > 30);
@@ -572,8 +572,7 @@ namespace AcceptOrDenyLibrary
 
         public static void SelectIDError(NPC npc)
         {
-            int roll = Logic.CreateRandomNumber(1, 3);
-            //roll = 2;
+            int roll = Logic.RollRandomNumber(1, 11);
 
             switch (roll)
             {
@@ -591,33 +590,51 @@ namespace AcceptOrDenyLibrary
                     }
                 case 3:
                     {
-                        npc.ErrorType = (int)Logic.IDErrorType.Birthday;
+                        npc.ErrorType = (int)Logic.IDErrorType.BirthMonth;
+                        npc.BirthMonth = Logic.ChangeNumber(npc.BirthMonth);
                         break;
                     }
                 case 4:
                     {
-                        npc.ErrorType = (int)Logic.IDErrorType.Gender;
+                        npc.ErrorType = (int)Logic.IDErrorType.BirthDay;
+                        npc.BirthDay = Logic.ChangeNumber(npc.BirthDay);
                         break;
                     }
                 case 5:
                     {
-                        npc.ErrorType = (int)Logic.IDErrorType.StreetNumber;
+                        npc.ErrorType = (int)Logic.IDErrorType.BirthYear;
+                        npc.BirthYear = Logic.ChangeNumber(npc.BirthYear);
                         break;
                     }
                 case 6:
                     {
-                        npc.ErrorType = (int)Logic.IDErrorType.StreetAddress;
-                        Logic.RemoveLetter(npc.StreetAddress);
+                        npc.ErrorType = (int)Logic.IDErrorType.Gender;
+                        // CHANGE GENDER
                         break;
                     }
                 case 7:
                     {
-                        npc.ErrorType = (int)Logic.IDErrorType.StreetDirection;
+                        npc.ErrorType = (int)Logic.IDErrorType.StreetAddress;
+                        npc.StreetAddress = Logic.RemoveLetter(npc.StreetAddress);
                         break;
                     }
                 case 8:
                     {
+                        npc.ErrorType = (int)Logic.IDErrorType.StreetNumber;
+                        npc.StreetNumber = Logic.ChangeNumber(npc.StreetNumber);
+                        break;
+                    }
+                case 9:
+                    {
+                        npc.ErrorType = (int)Logic.IDErrorType.StreetDirection;
+                        // CHANGE DIRECTION
+                        break;
+                    }
+                case 10:
+                    {
+                        DateTime date = DateTime.Now;
                         npc.ErrorType = (int)Logic.IDErrorType.ExpirationDate;
+                        SetIDExperation(date, npc);
                         break;
                     }
             }
@@ -629,6 +646,6 @@ namespace AcceptOrDenyLibrary
 
 TODO: 
 
-SELECT THE ILLEGAL TYPE (MAKE THE ERROR FIRST NAME OR LAST NAME OR EXPIRATION DATE, ETC)
+CHANGE DIRECTION AND GENDER.... THEN THE MEATY STUFF.
 */
 

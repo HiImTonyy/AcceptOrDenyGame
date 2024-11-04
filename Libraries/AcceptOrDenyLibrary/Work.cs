@@ -53,7 +53,11 @@ namespace AcceptOrDenyLibrary
                 NPC npc = new NPC().GenerateNPC();
                 NPC npcComputerInfo = new NPC(npc);
 
-                if (npc.IsIllegal) {NPC.SelectIDError(npc); }
+                if (npc.IsIllegal) {NPC.SelectIDError(npc);}
+                if (npc.ErrorType == (int)Logic.IDErrorType.ExpirationDate)
+                {
+                    npcComputerInfo = new NPC(npc);
+                }
 
                 HeaderScreen(work);
 

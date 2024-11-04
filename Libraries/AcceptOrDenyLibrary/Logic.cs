@@ -8,7 +8,7 @@ namespace AcceptOrDenyLibrary
 {
     public class Logic
     {
-        public static int CreateRandomNumber(int minNumber, int maxNumber)
+        public static int RollRandomNumber(int minNumber, int maxNumber)
         {
             Random random = new Random();
             int numberSelected = random.Next(minNumber, maxNumber);
@@ -19,7 +19,9 @@ namespace AcceptOrDenyLibrary
         {
             FirstName = 1,
             LastName,
-            Birthday,
+            BirthMonth,
+            BirthDay,
+            BirthYear,
             Gender,
             StreetAddress,
             StreetNumber,
@@ -29,9 +31,31 @@ namespace AcceptOrDenyLibrary
 
         public static string RemoveLetter(string name)
         {
-            int index = Logic.CreateRandomNumber(1, name.Length - 1);
+            int index = Logic.RollRandomNumber(1, name.Length - 1);
             name = name.Remove(index, 1);
             return name;
+        }
+
+        public static int ChangeNumber(int number)
+        {
+            if (number > 12 && number < 40)
+            {
+                number = RollRandomNumber(1, number);
+            }
+            else if  (number < 12)
+            {
+                number = RollRandomNumber(1, number);
+            }
+            else if (number > 1000)
+            {
+                number = number - RollRandomNumber(1, 3);
+            }
+            else
+            {
+                number = number + RollRandomNumber(1, 15);
+            }
+
+            return number;
         }
     }
 }
