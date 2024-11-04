@@ -102,8 +102,6 @@ namespace AcceptOrDenyLibrary
                 NPC npc = new NPC().GenerateNPC();
                 NPC npcComputerInfo = new NPC(npc);
 
-                Console.WriteLine($"{npc.IsIllegal}");
-
                 if (npc.IsIllegal) { NPC.SelectIDError(npc); }
                 if (npc.ErrorType == (int)Logic.IDErrorType.ExpirationDate)
                 {
@@ -226,7 +224,7 @@ namespace AcceptOrDenyLibrary
             {
                 Console.WriteLine("You live to work another day... Press Enter to get back to work.");
                 Console.ReadLine();
-                work.LineupCount = 10;
+                work.LineupCount = Logic.RollRandomNumber(5, 16);
                 Working(work, player);
             }
             else

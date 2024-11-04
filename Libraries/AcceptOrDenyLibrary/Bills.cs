@@ -101,12 +101,12 @@ namespace AcceptOrDenyLibrary
             if (bill.ElectricityBillDate == 0) 
             { 
                 bill.totalBill = bill.TotalBill + bill.ElectricityCost;
-                bill.ElectricityBillDate = 14;
+                bill.ElectricityBillDate = bill.electricityBillDate;
             }
             if (bill.RentBillDate == 0) 
             { 
                 bill.totalBill = bill.TotalBill + bill.RentCost;
-                bill.RentBillDate = 27;
+                bill.RentBillDate = bill.rentBillDate;
             }
 
             player.Money = player.Money - bill.TotalBill;
