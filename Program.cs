@@ -9,8 +9,8 @@ namespace AcceptOrDenyGame
             while (true)
             {
                 Console.Clear();
-                Console.WindowHeight = 45;
-                Console.WindowWidth = 145;
+                Console.WindowHeight = 35;
+                Console.WindowWidth = 55;
                 Console.ForegroundColor = ConsoleColor.Green;
 
                 Console.WriteLine("ACCEPT OR DENY - A text-based game by Anthony Butler\n");

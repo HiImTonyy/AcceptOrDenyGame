@@ -11,9 +11,12 @@ namespace AcceptOrDenyLibrary
         private int dayWage;
         private int currentDay;
         private int lineupCount;
-        private int bonusPay;
-        private int correctJudgements;
-        private int wrongJudgements;
+        private int bonusPayTotal;
+        private int totalCorrectJudgements;
+        private int totalIncorrectJudgements;
+        private double moneyPerCorrectChoice;
+        private int moneyPerWrongChoice;
+
 
         public int DayWage
         {
@@ -33,14 +36,46 @@ namespace AcceptOrDenyLibrary
             set { lineupCount = value; }
         }
 
+        public int BonsuPayTotal
+        {
+            get { return bonusPayTotal; }
+            set { bonusPayTotal = value; }
+        }
+
+        public int TotalCorrectJudgements
+        {
+            get { return totalCorrectJudgements; }
+            set { totalCorrectJudgements = value; }
+        }
+
+        public int TotalIncorrectJudgements
+        {
+            get { return totalIncorrectJudgements; }
+            set { totalIncorrectJudgements = value; }
+        }
+
+        public double MoneyPerCorrectChoice
+        {
+            get { return MoneyPerCorrectChoice; }
+            set { MoneyPerCorrectChoice = value; }
+        }
+
+        public int MoneyPerWrongChoice
+        {
+            get { return moneyPerWrongChoice; }
+            set { moneyPerCorrectChoice = value; }
+        }
+
         public Work()
         {
             dayWage = 50;
             currentDay = 1;
             lineupCount = 10;
-            bonusPay = 0;
-            correctJudgements = 0;
-            wrongJudgements = 0;
+            bonusPayTotal = 0;
+            totalCorrectJudgements = 0;
+            totalIncorrectJudgements = 0;
+            moneyPerCorrectChoice = 0.25;
+            moneyPerWrongChoice = 10;
         }
 
         public static void Working()
@@ -53,7 +88,7 @@ namespace AcceptOrDenyLibrary
                 NPC npc = new NPC().GenerateNPC();
                 NPC npcComputerInfo = new NPC(npc);
 
-                if (npc.IsIllegal) {NPC.SelectIDError(npc);}
+                if (npc.IsIllegal) { NPC.SelectIDError(npc); }
                 if (npc.ErrorType == (int)Logic.IDErrorType.ExpirationDate)
                 {
                     npcComputerInfo = new NPC(npc);
@@ -62,11 +97,11 @@ namespace AcceptOrDenyLibrary
                 HeaderScreen(work);
 
                 ShowMonitor(npcComputerInfo);
-                Console.WriteLine("\n");
+
                 NPC.ShowNpcID(npc);
 
-                Console.ReadLine();
-            } while (true);
+                MakeChoice(npc, work);
+            } while (work.lineupCount > 0);
         }
 
         public static void HeaderScreen(Work work)
@@ -83,14 +118,61 @@ namespace AcceptOrDenyLibrary
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("COMPUTER SCREEN");
-            Console.WriteLine("---------------");
+            Console.WriteLine("===============");
             Console.WriteLine($"First Name: {npcComputerInfo.FirstName}");
             Console.WriteLine($"Last Name: {npcComputerInfo.LastName}");
             Console.WriteLine($"Birthday: {npcComputerInfo.BirthMonth}/{npcComputerInfo.BirthDay}/{npcComputerInfo.BirthYear}");
             Console.WriteLine($"Gender: {npcComputerInfo.Gender}");
             Console.WriteLine($"Home Address: {npcComputerInfo.StreetNumber} {npcComputerInfo.StreetAddress} street {npcComputerInfo.StreetDirection}");
-            Console.WriteLine($"Expiration Date: {npcComputerInfo.ExpirationMonth}/{npcComputerInfo.ExpirationDay}/{npcComputerInfo.ExpirationYear}");
+            Console.WriteLine($"Expiration Date: {npcComputerInfo.ExpirationMonth}/{npcComputerInfo.ExpirationDay}/{npcComputerInfo.ExpirationYear}\n");
             Console.ResetColor();
+        }
+
+        public static void MakeChoice(NPC npc, Work work)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("\n-----------------------------------------------");
+            Console.WriteLine("1) Accept Entry");
+            Console.WriteLine("2) Deny Entry\n");
+
+            Console.Write("Input: ");
+            Console.ResetColor();
+
+            string choice = Console.ReadLine();
+
+            if (choice == "1" && npc.IsIllegal == false) 
+            {
+                IncreaseCorrectJudgement(work);
+            }
+            else if (choice == "2" && npc.IsIllegal == true)
+            {
+                IncreaseCorrectJudgement(work);
+            }
+            else
+            {
+                IncreaseIncorrectJudgement(work, npc);
+            }
+
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
+
+            work.LineupCount--;
+        }
+
+        public static void IncreaseCorrectJudgement(Work work)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Correct!");
+            Console.ResetColor();
+            work.TotalCorrectJudgements++;
+        }
+
+        public static void IncreaseIncorrectJudgement(Work work, NPC npc)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Incorrect! the error was their {npc.ErrorTypeString}.");
+            Console.ResetColor();
+            work.TotalIncorrectJudgements++;
         }
     }
 }

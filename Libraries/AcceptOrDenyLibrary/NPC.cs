@@ -23,6 +23,7 @@ namespace AcceptOrDenyLibrary
         private int expirationYear;
         private bool isIllegal;
         private int errorType;
+        private string errorTypeString;
 
         public string FirstName
         {
@@ -110,6 +111,12 @@ namespace AcceptOrDenyLibrary
         {
             get { return errorType; }
             set { errorType = value; }
+        }
+
+        public string ErrorTypeString
+        {
+            get { return errorTypeString; }
+            set { errorTypeString = value; }
         }
 
         public NPC()
@@ -498,10 +505,9 @@ namespace AcceptOrDenyLibrary
 
         public static void ShowNpcID(NPC npc)
         {
-            //Console.WriteLine(npc.IsIllegal);
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("ID GIVEN");
-            Console.WriteLine("--------");
+            Console.WriteLine("========");
             Console.WriteLine($"First Name: {npc.FirstName}");
             Console.WriteLine($"Last Name: {npc.LastName}");
             Console.WriteLine($"Birthday: {npc.BirthMonth}/{npc.BirthDay}/{npc.BirthYear}");
@@ -580,30 +586,35 @@ namespace AcceptOrDenyLibrary
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.FirstName;
                         npc.FirstName = Logic.RemoveLetter(npc.FirstName);
+                        npc.ErrorTypeString = "First Name";
                         break;
                     }
                 case 2:
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.LastName;
                         npc.LastName = Logic.RemoveLetter(npc.LastName);
+                        npc.ErrorTypeString = "Last Name";
                         break;
                     }
                 case 3:
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.BirthMonth;
                         npc.BirthMonth = Logic.ChangeNumber(npc.BirthMonth);
+                        npc.ErrorTypeString = "Birth Month";
                         break;
                     }
                 case 4:
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.BirthDay;
                         npc.BirthDay = Logic.ChangeNumber(npc.BirthDay);
+                        npc.ErrorTypeString = "Birth Day";
                         break;
                     }
                 case 5:
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.BirthYear;
                         npc.BirthYear = Logic.ChangeNumber(npc.BirthYear);
+                        npc.ErrorTypeString = "Birth Month";
                         break;
                     }
                 case 6:
@@ -614,24 +625,28 @@ namespace AcceptOrDenyLibrary
                         {
                             npc.Gender = "Male";
                         }
+                        npc.ErrorTypeString = "Gender";
                         break;
                     }
                 case 7:
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.StreetAddress;
                         npc.StreetAddress = Logic.RemoveLetter(npc.StreetAddress);
+                        npc.ErrorTypeString = "Street Address";
                         break;
                     }
                 case 8:
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.StreetNumber;
                         npc.StreetNumber = Logic.ChangeNumber(npc.StreetNumber);
+                        npc.ErrorTypeString = "Street Number";
                         break;
                     }
                 case 9:
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.StreetDirection;
                         npc.StreetDirection = Logic.ChangeDirection(npc);
+                        npc.ErrorTypeString = "Street Direction";
                         break;
                     }
                 case 10:
@@ -639,6 +654,7 @@ namespace AcceptOrDenyLibrary
                         DateTime date = DateTime.Now;
                         npc.ErrorType = (int)Logic.IDErrorType.ExpirationDate;
                         SetIDExperation(date, npc);
+                        npc.ErrorTypeString = "Expiration Date";
                         break;
                     }
             }
@@ -650,6 +666,11 @@ namespace AcceptOrDenyLibrary
 
 TODO: 
 
-CHANGE DIRECTION AND GENDER.... THEN THE MEATY STUFF.
+- MAKE THE PLAYER LOSE MONEY IF CHOSE WRONG
+- MAKE THE PLAYER GAIN MONEY AT THE END OF THE DAY
+- MAKE THE PLAYER GAIN BONUS MONEY PER CORRECT ANSWER
+- SHOW END DAY SCREEN THAT SHOWS MONEY GAINED, BONUS MONEY, MONEY LOST, THEN THE TOTAL AMOUNT. 
+- SHOW BILL SCREEN IF ITS BILL DATE.
+- RANDOMLY SELECT NUMBER FOR LINEUP (8 - 20... maybe have some setting to change min and max?) 
 */
 
