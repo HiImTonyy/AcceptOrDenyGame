@@ -27,11 +27,14 @@ namespace AcceptOrDenyGame
                     case "1":
                         Player player = new Player();
                         Work work = new Work();
+                        Bills bill = new Bills();
 
                         player.FirstName = Player.NamePlayer("Write the first name of your new character.");
                         player.LastName = Player.NamePlayer("And the last name?");
                         Console.Clear();
-                        Work.Working(work, player);
+                        Work.Working(work, player, bill);
+                        break;
+                    case "2":
                         break;
                 }
             }

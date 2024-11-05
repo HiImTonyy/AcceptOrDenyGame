@@ -94,7 +94,7 @@ namespace AcceptOrDenyLibrary
             moneyGained = 0;
         }
 
-        public static void Working(Work work, Player player)
+        public static void Working(Work work, Player player, Bills bill)
         {
             do
             {
@@ -118,7 +118,7 @@ namespace AcceptOrDenyLibrary
             } while (work.lineupCount > 0);
 
             Console.Clear();
-            EndDayScreen(work, player);
+            EndDayScreen(work, player, bill);
         }
 
         public static void HeaderScreen(Work work)
@@ -192,7 +192,7 @@ namespace AcceptOrDenyLibrary
             work.TotalIncorrectJudgements++;
         }
 
-        public static void EndDayScreen(Work work, Player player)
+        public static void EndDayScreen(Work work, Player player, Bills bill)
         {
             TallyUpMoney(work, player);
 
@@ -218,14 +218,14 @@ namespace AcceptOrDenyLibrary
             Console.ResetColor();
             Console.WriteLine("\nPress Enter to continue...");
             Console.ReadLine();
-            Bills.PayBillsScreen(player);
+            Bills.PayBillsScreen(player, bill);
 
             if (player.Money > 0)
             {
                 Console.WriteLine("You live to work another day... Press Enter to get back to work.");
                 Console.ReadLine();
                 work.LineupCount = Logic.RollRandomNumber(5, 16);
-                Working(work, player);
+                Working(work, player, bill);
             }
             else
             {

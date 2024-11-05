@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -493,7 +494,7 @@ namespace AcceptOrDenyLibrary
 
         public static bool MakeIllegal()
         {
-            int illegalChance = 35;
+            int illegalChance = 100;
             int roll = Logic.RollRandomNumber(1, 101);
 
             if (roll > illegalChance)
@@ -614,7 +615,7 @@ namespace AcceptOrDenyLibrary
                     {
                         npc.ErrorType = (int)Logic.IDErrorType.BirthYear;
                         npc.BirthYear = Logic.ChangeNumber(npc.BirthYear);
-                        npc.ErrorTypeString = "Birth Month";
+                        npc.ErrorTypeString = "Birth Year";
                         break;
                     }
                 case 6:
