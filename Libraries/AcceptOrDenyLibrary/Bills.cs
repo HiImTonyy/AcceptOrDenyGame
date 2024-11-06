@@ -68,12 +68,12 @@ namespace AcceptOrDenyLibrary
             totalBill = 0;
         }
 
-        public static void PayBillsScreen(Player player, Bills bill)
+        public static void PayBillsScreen(Bills bill, Player player)
         {
             DecreaseBillDates(bill);
-            Console.WriteLine($"Days till Food Bill: {bill.FoodBillDate}");
-            Console.WriteLine($"Days till Electricity Bill: {bill.ElectricityBillDate}");
-            Console.WriteLine($"Days till Rent Bill: {bill.RentBillDate}\n");
+            Console.WriteLine($"Days till Food Bill: {bill.FoodBillDate} (${bill.FoodCost})");
+            Console.WriteLine($"Days till Electricity Bill: {bill.ElectricityBillDate}  (${bill.ElectricityCost})");
+            Console.WriteLine($"Days till Rent Bill: {bill.RentBillDate}  (${bill.RentCost})\n");
 
             PayBills(player, bill);
 
@@ -93,18 +93,18 @@ namespace AcceptOrDenyLibrary
         {
             if (bill.FoodBillDate == 0) 
             { 
-                bill.totalBill = bill.TotalBill + bill.FoodCost;
+                bill.TotalBill = bill.TotalBill + bill.FoodCost;
                 bill.FoodBillDate++;
             }
             if (bill.ElectricityBillDate == 0) 
             { 
-                bill.totalBill = bill.TotalBill + bill.ElectricityCost;
-                bill.ElectricityBillDate = bill.electricityBillDate;
+                bill.TotalBill = bill.TotalBill + bill.ElectricityCost;
+                bill.ElectricityBillDate = bill.ElectricityBillDate;
             }
             if (bill.RentBillDate == 0) 
             { 
-                bill.totalBill = bill.TotalBill + bill.RentCost;
-                bill.RentBillDate = bill.rentBillDate;
+                bill.TotalBill = bill.TotalBill + bill.RentCost;
+                bill.RentBillDate = bill.RentBillDate;
             }
 
             player.Money = player.Money - bill.TotalBill;

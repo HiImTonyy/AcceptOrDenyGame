@@ -14,7 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Desktop\AcceptOrDenyLibrary\AcceptOrDenyLibrary.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="Libraries\AcceptOrDenyLibrary\AcceptOrDenyLibrary.csproj" />
   </ItemGroup>
 

@@ -94,8 +94,10 @@ namespace AcceptOrDenyLibrary
             moneyGained = 0;
         }
 
-        public static void Working(Work work, Player player, Bills bill)
+        public static void Working(Bills bill, Player player, Work work)
         {
+            Logic.SaveGame(bill, player, work);
+
             do
             {
                 Console.Clear();
@@ -118,7 +120,7 @@ namespace AcceptOrDenyLibrary
             } while (work.lineupCount > 0);
 
             Console.Clear();
-            EndDayScreen(work, player, bill);
+            EndDayScreen(bill, player, work);
         }
 
         public static void HeaderScreen(Work work)
@@ -192,9 +194,9 @@ namespace AcceptOrDenyLibrary
             work.TotalIncorrectJudgements++;
         }
 
-        public static void EndDayScreen(Work work, Player player, Bills bill)
+        public static void EndDayScreen(Bills bill, Player player, Work work)
         {
-            TallyUpMoney(work, player);
+            TallyUpMoney(player, work);
 
             Console.WriteLine($"Days Wage: ${work.DayWage}\n");
 
@@ -218,14 +220,15 @@ namespace AcceptOrDenyLibrary
             Console.ResetColor();
             Console.WriteLine("\nPress Enter to continue...");
             Console.ReadLine();
-            Bills.PayBillsScreen(player, bill);
+            Bills.PayBillsScreen(bill, player);
 
             if (player.Money > 0)
             {
                 Console.WriteLine("You live to work another day... Press Enter to get back to work.");
                 Console.ReadLine();
                 work.LineupCount = Logic.RollRandomNumber(5, 16);
-                Working(work, player, bill);
+                bill.TotalBill = 0;
+                Working(bill, player, work);
             }
             else
             {
@@ -236,7 +239,7 @@ namespace AcceptOrDenyLibrary
             }
         }
 
-        public static void TallyUpMoney(Work work, Player player)
+        public static void TallyUpMoney(Player player, Work work)
         {
             work.BonusPayTotal = work.MoneyPerCorrectChoice * work.TotalCorrectJudgements;
             work.MoneyLost = work.MoneyPerWrongChoice * work.TotalIncorrectJudgements;

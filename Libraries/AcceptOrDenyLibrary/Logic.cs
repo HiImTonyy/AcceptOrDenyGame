@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Numerics;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace AcceptOrDenyLibrary
@@ -84,6 +86,68 @@ namespace AcceptOrDenyLibrary
             } while ( currentDirection == npc.StreetDirection );
 
             return npc.StreetDirection;
+        }
+
+        public static void SaveGame(Bills bill, Player player, Work work)
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string filePath = Path.Combine(path, "AcceptOrDenySave.txt");
+
+            using (StreamWriter streamWrite = new StreamWriter(filePath))
+            {
+                streamWrite.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(bill));
+                streamWrite.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(player));
+                streamWrite.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(work));
+            }
+        }
+
+        public static void LoadGame(Bills bill, Player player, Work work)
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string filePath = Path.Combine(path, "AcceptOrDenySave.txt");
+
+            if (File.Exists(filePath))
+            {
+                var lines = File.ReadAllLines(filePath);
+                if (lines.Length >= 3)
+                {
+                    bill = Newtonsoft.Json.JsonConvert.DeserializeObject<Bills>(lines[0]);
+                    player = Newtonsoft.Json.JsonConvert.DeserializeObject<Player>(lines[1]);
+                    work = Newtonsoft.Json.JsonConvert.DeserializeObject<Work>(lines[2]);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    throw new Exception("CANNOT LOAD BECAUSE THE SAVE GOT CORRUPTED!");
+                    Console.ReadLine();
+                }
+            }
+            else
+            {
+                Console.ForegroundColor= ConsoleColor.Red;
+                Console.WriteLine("NO SAVE FILE FOUND! PRESS ENTER TO CREATE A NEW ONE!");
+                Console.ReadLine();
+                Console.ResetColor();
+                NewGame(bill, player, work);
+            }
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Game Loaded!");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
+            Console.ResetColor();
+            Work.Working(bill, player, work);
+        }
+
+        public static void NewGame(Bills bill, Player player, Work work)
+        {
+            Console.Clear();
+
+            player.FirstName = Player.NamePlayer("Write the first name of your new character.");
+            player.LastName = Player.NamePlayer("And the last name?");
+            Console.Clear();
+            Work.Working(bill, player, work);
         }
     }
 }

@@ -8,6 +8,10 @@ namespace AcceptOrDenyGame
         {
             while (true)
             {
+                Bills bill = new Bills();
+                Player player = new Player();
+                Work work = new Work();
+
                 Console.Clear();
                 Console.WindowHeight = 45;
                 Console.WindowWidth = 95;
@@ -25,16 +29,10 @@ namespace AcceptOrDenyGame
                 switch (input)
                 {
                     case "1":
-                        Player player = new Player();
-                        Work work = new Work();
-                        Bills bill = new Bills();
-
-                        player.FirstName = Player.NamePlayer("Write the first name of your new character.");
-                        player.LastName = Player.NamePlayer("And the last name?");
-                        Console.Clear();
-                        Work.Working(work, player, bill);
+                        Logic.NewGame(bill, player, work);
                         break;
                     case "2":
+                        Logic.LoadGame(bill, player, work);
                         break;
                 }
             }
