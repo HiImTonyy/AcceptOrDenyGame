@@ -297,10 +297,11 @@ namespace AcceptOrDenyLibrary
         public static void CheckForPromotion(Player player, Work work)
         {
             int wageThen = work.DayWage;
-            work.DayWage = work.DayWage + 10;
 
             if (work.WeeksIncorrectJudgements == 0 && work.CurrentDay >= 7)
             {
+                work.DayWage = work.DayWage + 10;
+
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("You've been promoted!");
@@ -311,15 +312,32 @@ namespace AcceptOrDenyLibrary
                 Console.ReadLine();
 
                 work.CurrentDay = 1;
+                work.WeeksCorrectJudgements = 0;
             }
-            else if (work.WeeksIncorrectJudgements > 0 && work.CurrentDay == 7)
+            else if (work.WeeksIncorrectJudgements >= 17 && work.CurrentDay == 7)
             {
+                work.DayWage = work.DayWage - 10;
+
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You've been demoted!");
+                Console.WriteLine($"Your wage is now going from ${wageThen} to ${work.DayWage}. stop fucking up!\n");
+                Console.ResetColor();
+
+                Console.WriteLine("Press Enter to continue...");
+                Console.ReadLine();
+
                 work.CurrentDay = 1;
+                work.WeeksIncorrectJudgements = 0;
             }
-            else
+            else if (work.CurrentDay == 7)
             {
-                work.currentDay = work.CurrentDay + 1;
+                work.CurrentDay = 0;
+                work.WeeksCorrectJudgements = 0;
+                work.WeeksIncorrectJudgements = 0;
             }
+
+            work.currentDay = work.CurrentDay + 1;
         }
     }
 }
