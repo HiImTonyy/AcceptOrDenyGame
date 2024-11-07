@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,8 +13,12 @@ namespace AcceptOrDenyLibrary
         private int currentDay;
         private int lineupCount;
         private double bonusPayTotal;
-        private int totalCorrectJudgements;
-        private int totalIncorrectJudgements;
+        private int todaysCorrectJudgements;
+        private int todaysIncorrectJudgements;
+        private int weeksCorrectJudgements;
+        private int weeksIncorrectJudgements;
+        private int alltimeCorrectJudgements;
+        private int alltimeIncorrectJudgements;
         private double moneyPerCorrectChoice;
         private int moneyPerWrongChoice;
         private int moneyLost;
@@ -28,8 +33,8 @@ namespace AcceptOrDenyLibrary
 
         public int CurrentDay
         {
-            get { return dayWage; }
-            set { dayWage = value; }
+            get { return currentDay; }
+            set { currentDay = value; }
         }
 
         public int LineupCount
@@ -44,16 +49,40 @@ namespace AcceptOrDenyLibrary
             set { bonusPayTotal = value; }
         }
 
-        public int TotalCorrectJudgements
+        public int TodaysCorrectJudgements
         {
-            get { return totalCorrectJudgements; }
-            set { totalCorrectJudgements = value; }
+            get { return todaysCorrectJudgements; }
+            set { todaysCorrectJudgements = value; }
         }
 
-        public int TotalIncorrectJudgements
+        public int TodaysIncorrectJudgements
         {
-            get { return totalIncorrectJudgements; }
-            set { totalIncorrectJudgements = value; }
+            get { return todaysIncorrectJudgements; }
+            set { todaysIncorrectJudgements = value; }
+        }
+
+        public int WeeksCorrectJudgements
+        {
+            get { return weeksCorrectJudgements; }
+            set { weeksCorrectJudgements = value; }
+        }
+
+        public int WeeksIncorrectJudgements
+        {
+            get { return weeksIncorrectJudgements; }
+            set { weeksIncorrectJudgements = value; }
+        }
+
+        public int AlltimeCorrectJudgements
+        {
+            get { return alltimeCorrectJudgements; }
+            set { alltimeCorrectJudgements = value; }
+        }
+
+        public int AlltimeIncorrectJudgements
+        {
+            get { return alltimeIncorrectJudgements; }
+            set { alltimeIncorrectJudgements = value; }
         }
 
         public double MoneyPerCorrectChoice
@@ -86,8 +115,12 @@ namespace AcceptOrDenyLibrary
             currentDay = 1;
             lineupCount = 10;
             bonusPayTotal = 0;
-            totalCorrectJudgements = 0;
-            totalIncorrectJudgements = 0;
+            todaysCorrectJudgements = 0;
+            todaysIncorrectJudgements = 0;
+            weeksCorrectJudgements = 0;
+            weeksIncorrectJudgements = 0;
+            alltimeCorrectJudgements = 0;
+            alltimeIncorrectJudgements = 0;
             moneyPerCorrectChoice = 0.25;
             moneyPerWrongChoice = 10;
             moneyLost = 0;
@@ -110,7 +143,7 @@ namespace AcceptOrDenyLibrary
                     npcComputerInfo = new NPC(npc);
                 }
 
-                HeaderScreen(work);
+                HeaderScreen(work, player);
 
                 ShowMonitor(npcComputerInfo);
 
@@ -123,13 +156,13 @@ namespace AcceptOrDenyLibrary
             EndDayScreen(bill, player, work);
         }
 
-        public static void HeaderScreen(Work work)
+        public static void HeaderScreen(Work work, Player player)
         {
             DateTime localDate = DateTime.Now;
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"People in line: {work.lineupCount}\tCurrent Day: {localDate.Month}/{localDate.Day}/{localDate.Year}");
-            Console.WriteLine("-----------------------------------------------\n");
+            Console.WriteLine($"People in line: {work.lineupCount}\tDays Employed: {player.DaysEmployed}\tCurrent Day: {localDate.Month}/{localDate.Day}/{localDate.Year}");
+            Console.WriteLine("-----------------------------------------------------------------------\n");
             Console.ResetColor();
         }
 
@@ -183,7 +216,7 @@ namespace AcceptOrDenyLibrary
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Correct!");
             Console.ResetColor();
-            work.TotalCorrectJudgements++;
+            work.TodaysCorrectJudgements++;
         }
 
         public static void IncreaseIncorrectJudgement(Work work, NPC npc)
@@ -191,7 +224,7 @@ namespace AcceptOrDenyLibrary
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Incorrect! the error was their {npc.ErrorTypeString}.");
             Console.ResetColor();
-            work.TotalIncorrectJudgements++;
+            work.TodaysIncorrectJudgements++;
         }
 
         public static void EndDayScreen(Bills bill, Player player, Work work)
@@ -200,11 +233,11 @@ namespace AcceptOrDenyLibrary
 
             Console.WriteLine($"Days Wage: ${work.DayWage}\n");
 
-            Console.WriteLine($"Correct Judgements: {work.TotalCorrectJudgements}");
+            Console.WriteLine($"Correct Judgements: {work.TodaysCorrectJudgements}");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Bonus Money: ${work.bonusPayTotal}");
             Console.ResetColor();
-            Console.WriteLine($"\nIncorrect Judgements: {work.TotalIncorrectJudgements}");
+            Console.WriteLine($"\nIncorrect Judgements: {work.TodaysIncorrectJudgements}");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Money Docked: ${work.MoneyLost}");
             Console.ResetColor();
@@ -227,7 +260,20 @@ namespace AcceptOrDenyLibrary
                 Console.WriteLine("You live to work another day... Press Enter to get back to work.");
                 Console.ReadLine();
                 work.LineupCount = Logic.RollRandomNumber(5, 16);
+
+                // To reset some stuff and to increase some things
+
                 bill.TotalBill = 0;
+                work.AlltimeCorrectJudgements = work.AlltimeCorrectJudgements + work.todaysCorrectJudgements;
+                work.AlltimeIncorrectJudgements = work.AlltimeIncorrectJudgements + work.todaysIncorrectJudgements;
+                work.WeeksCorrectJudgements = work.WeeksCorrectJudgements + work.TodaysCorrectJudgements;
+                work.WeeksIncorrectJudgements = work.WeeksIncorrectJudgements + work.TodaysIncorrectJudgements;
+                work.TodaysCorrectJudgements = 0;
+                work.TodaysIncorrectJudgements = 0;
+                player.DaysEmployed = player.DaysEmployed + 1;
+
+                CheckForPromotion(player, work);
+
                 Working(bill, player, work);
             }
             else
@@ -241,11 +287,39 @@ namespace AcceptOrDenyLibrary
 
         public static void TallyUpMoney(Player player, Work work)
         {
-            work.BonusPayTotal = work.MoneyPerCorrectChoice * work.TotalCorrectJudgements;
-            work.MoneyLost = work.MoneyPerWrongChoice * work.TotalIncorrectJudgements;
+            work.BonusPayTotal = work.MoneyPerCorrectChoice * work.TodaysCorrectJudgements;
+            work.MoneyLost = work.MoneyPerWrongChoice * work.TodaysIncorrectJudgements;
 
             work.MoneyGained = work.DayWage + work.bonusPayTotal - work.MoneyLost;
             player.Money = player.Money + work.MoneyGained;
+        }
+
+        public static void CheckForPromotion(Player player, Work work)
+        {
+            int wageThen = work.DayWage;
+            work.DayWage = work.DayWage + 10;
+
+            if (work.WeeksIncorrectJudgements == 0 && work.CurrentDay >= 7)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine("You've been promoted!");
+                Console.WriteLine($"Your wage is now going from ${wageThen} to ${work.DayWage}. Congratulations!\n");
+                Console.ResetColor();
+
+                Console.WriteLine("Press Enter to continue...");
+                Console.ReadLine();
+
+                work.CurrentDay = 1;
+            }
+            else if (work.WeeksIncorrectJudgements > 0 && work.CurrentDay == 7)
+            {
+                work.CurrentDay = 1;
+            }
+            else
+            {
+                work.currentDay = work.CurrentDay + 1;
+            }
         }
     }
 }

@@ -25,7 +25,7 @@
             set { money = value; }
         }
 
-        private int DaysEmployed
+        public int DaysEmployed
         {
             get { return daysEmployed; }
             set { daysEmployed = value; }
