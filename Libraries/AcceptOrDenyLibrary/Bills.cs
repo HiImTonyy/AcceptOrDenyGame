@@ -70,6 +70,7 @@ namespace AcceptOrDenyLibrary
 
         public static void PayBillsScreen(Bills bill, Player player)
         {
+            Console.Clear();
             DecreaseBillDates(bill);
             Console.WriteLine($"Days till Food Bill: {bill.FoodBillDate} (${bill.FoodCost})");
             Console.WriteLine($"Days till Electricity Bill: {bill.ElectricityBillDate}  (${bill.ElectricityCost})");

@@ -494,7 +494,7 @@ namespace AcceptOrDenyLibrary
 
         public static bool MakeIllegal()
         {
-            int illegalChance = 40;
+            int illegalChance = 100;
             int roll = Logic.RollRandomNumber(1, 101);
 
             if (roll > illegalChance)

@@ -11,7 +11,8 @@ namespace AcceptOrDenyLibrary
     {
         private int dayWage;
         private int currentDay;
-        private int lineupCount;
+        private int currentLineup;
+        private int totalLineup;
         private double bonusPayTotal;
         private int todaysCorrectJudgements;
         private int todaysIncorrectJudgements;
@@ -37,10 +38,16 @@ namespace AcceptOrDenyLibrary
             set { currentDay = value; }
         }
 
-        public int LineupCount
+        public int CurrentLineup
         {
-            get { return lineupCount; }
-            set { lineupCount = value; }
+            get { return currentLineup; }
+            set { currentLineup = value; }
+        }
+
+        public int TotalLineup
+        {
+            get { return totalLineup; }
+            set { TotalLineup = value; }
         }
 
         public double BonusPayTotal
@@ -113,7 +120,8 @@ namespace AcceptOrDenyLibrary
         {
             dayWage = 50;
             currentDay = 1;
-            lineupCount = 10;
+            currentLineup = 10;
+            totalLineup = 10;
             bonusPayTotal = 0;
             todaysCorrectJudgements = 0;
             todaysIncorrectJudgements = 0;
@@ -150,7 +158,7 @@ namespace AcceptOrDenyLibrary
                 NPC.ShowNpcID(npc);
 
                 MakeChoice(npc, work);
-            } while (work.lineupCount > 0);
+            } while (work.CurrentLineup > 0);
 
             Console.Clear();
             EndDayScreen(bill, player, work);
@@ -161,8 +169,9 @@ namespace AcceptOrDenyLibrary
             DateTime localDate = DateTime.Now;
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"People in line: {work.lineupCount}\tDays Employed: {player.DaysEmployed}\tCurrent Day: {localDate.Month}/{localDate.Day}/{localDate.Year}");
-            Console.WriteLine("-----------------------------------------------------------------------\n");
+            // 3 spaces for the | 
+            Console.WriteLine($"People in line: {work.CurrentLineup}   |   Days Employed: {player.DaysEmployed}   |   Current Day: {localDate.Month}/{localDate.Day}/{localDate.Year}   |   Name: {player.FirstName} {player.LastName}");
+            Console.WriteLine("------------------------------------------------------------------------------------------------------\n");
             Console.ResetColor();
         }
 
@@ -208,7 +217,7 @@ namespace AcceptOrDenyLibrary
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
 
-            work.LineupCount--;
+            work.CurrentLineup--;
         }
 
         public static void IncreaseCorrectJudgement(Work work)
@@ -249,17 +258,20 @@ namespace AcceptOrDenyLibrary
             Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine($"New bank balance: ${player.Money}");
+            Console.WriteLine($"New bank balance: ${player.Money}\n");
             Console.ResetColor();
+            BossEndOfDayComment(player, work);
+
             Console.WriteLine("\nPress Enter to continue...");
             Console.ReadLine();
+
             Bills.PayBillsScreen(bill, player);
 
             if (player.Money > 0)
             {
                 Console.WriteLine("You live to work another day... Press Enter to get back to work.");
                 Console.ReadLine();
-                work.LineupCount = Logic.RollRandomNumber(5, 16);
+                work.CurrentLineup = Logic.RollRandomNumber(5, 16);
 
                 // To reset some stuff and to increase some things
 
@@ -338,6 +350,74 @@ namespace AcceptOrDenyLibrary
             }
 
             work.currentDay = work.CurrentDay + 1;
+        }
+
+        public static void BossEndOfDayComment(Player player, Work work)
+        {
+            string bossComment = "pizza";
+            int commentSelected = 0;
+            int dividedLineup = work.TotalLineup / 2;
+
+            List<string> worstDayComments = new List<string>();
+
+            worstDayComments.Add($"YOU FUCKING SUCKED TODAY {player.FirstName.ToUpper()}! DO BETTER NEXT TIME... IF THERE IS A NEXT TIME.");
+            worstDayComments.Add($"WHAT THE HELL HAPPEND TODAY? YOU FUCKED UP BAD {player.FirstName.ToUpper()}!");
+            worstDayComments.Add($"YOU ARE A MSSIVE FAILURE TO OUR COUNTRY {player.FirstName.ToUpper()}!");
+
+            List<string> badDayComments = new List<string>();
+
+            badDayComments.Add($"Hey {player.FirstName}, you tired? WELL TOO BAD! DO BETTER NEXT TIME.");
+            badDayComments.Add($"Your not a complete failure, but... you should have done better today {player.FirstName}.");
+            badDayComments.Add($"You get a C today {player.FirstName}. that is all.");
+
+            List<string> averageDayComments = new List<string>();
+
+            averageDayComments.Add($"Not great, but not bad either today {player.FirstName}.");
+            averageDayComments.Add($"Decent work today {player.FirstName}.");
+            averageDayComments.Add($"Eh.. today could have been worse.");
+
+            List<string> goodDayComments = new List<string>();
+
+            goodDayComments.Add($"Good job today {player.FirstName}!");
+            goodDayComments.Add($"Keep up the good work {player.FirstName}!");
+            goodDayComments.Add($"{player.FirstName}, you did well today. I hope to see that tomorrow as well!");
+
+            List<string> bestDayComments = new List<string>();
+
+            bestDayComments.Add($"You did flawless today {player.FirstName}. well done!");
+            bestDayComments.Add($"Amazing job today {player.FirstName}!");
+            bestDayComments.Add($"{player.FirstName}, you did beyond amazing today. I hope to see more of that!");
+
+            if (work.TodaysIncorrectJudgements == work.TotalLineup)
+            {
+                commentSelected = Logic.RollRandomNumber(0, worstDayComments.Count);
+                bossComment = worstDayComments[commentSelected];
+            }
+            else if (work.TodaysCorrectJudgements == work.TotalLineup)
+            {
+                commentSelected = Logic.RollRandomNumber(0, bestDayComments.Count );
+                bossComment = bestDayComments[commentSelected];
+            }
+            else if (work.TodaysIncorrectJudgements == work.TodaysCorrectJudgements)
+            {
+                commentSelected = Logic.RollRandomNumber(0, averageDayComments.Count);
+                bossComment = averageDayComments[commentSelected];
+            }
+            else if (work.TodaysCorrectJudgements > dividedLineup)
+            {
+                commentSelected = Logic.RollRandomNumber(0, goodDayComments.Count);
+                bossComment = goodDayComments[commentSelected];
+            }
+            else if (work.TodaysIncorrectJudgements > dividedLineup)
+            {
+                commentSelected = Logic.RollRandomNumber(0, badDayComments.Count);
+                bossComment = badDayComments[commentSelected];
+            }
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine($"Boss: {bossComment}");
+            
+            Console.ResetColor();
         }
     }
 }
