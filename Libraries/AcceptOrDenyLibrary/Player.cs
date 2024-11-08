@@ -61,6 +61,7 @@
                 Console.WriteLine("1) Go back to work");
                 Console.WriteLine("2) Show Stats");
                 Console.WriteLine("3) Save Game");
+                Console.WriteLine("4) Game Info");
 
                 string userInput = Console.ReadLine();
 
@@ -75,6 +76,9 @@
                         break;
                     case "3":
                         Logic.SaveGame(bill, player, work);
+                        break;
+                    case "4":
+                        Logic.GameInfo(bill, player, work);
                         break;
                 }
             }

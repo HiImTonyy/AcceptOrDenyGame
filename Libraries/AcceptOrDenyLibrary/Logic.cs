@@ -151,7 +151,50 @@ namespace AcceptOrDenyLibrary
             player.FirstName = Player.NamePlayer("Write the first name of your new character.");
             player.LastName = Player.NamePlayer("And the last name?");
             Console.Clear();
-            Work.Working(bill, player, work);
+            Player.Home(bill, player, work);
+        }
+
+        public static void GameInfo(Bills bill, Player player, Work work)
+        {
+            Console.Clear();
+            NPC npc = new NPC().GenerateNPC();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+
+            Work.HeaderScreen(work, player);
+            Work.ShowMonitor(npc);
+            NPC.ShowNpcID(npc);
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+
+            Console.WriteLine("\nThe point of the game is to accept or deny someone coming into the country.\n");
+
+            Console.WriteLine("The computer screen shows the valid info of the person in-front of you. if the ID given does not match");
+            Console.WriteLine("the computer screen, then you must deny them. if it does, accept them. be sure to check the expiration");
+            Console.WriteLine("Date as well. if their ID is the same but its expired, deny them.\n");
+
+            Console.WriteLine("The list of things that can be changed are as followed:");
+            Console.WriteLine("1 - First Name");
+            Console.WriteLine("2 - Last Name");
+            Console.WriteLine("3 - Birth Month");
+            Console.WriteLine("4 - Birth Day");
+            Console.WriteLine("5 - Birth Year");
+            Console.WriteLine("6 - Gender");
+            Console.WriteLine("7 - Streed Address");
+            Console.WriteLine("8 - Street Number");
+            Console.WriteLine("9 - Street Direction\n");
+
+            Console.WriteLine("Again, be sure the check the expiration date!\n");
+
+            Console.WriteLine("At the end of the day, you will lose quite a bit of money for each wrong judgement but gain some money");
+            Console.WriteLine("for each correct judgement. you will also have to pay any bills that are due. your bills are:");
+            Console.WriteLine("Food, Electric, and Rent. IF YOUR BALANCE REACHES 0, YOU LOSE THE GAME!");
+
+            Console.WriteLine("Also, If you do super well by the end of the week, then you will get a promotion. do super bad and");
+            Console.WriteLine("you will get demoted. promotion = increased daily wage, demotion = decreased daily wage.");
+            Console.WriteLine("You can also view all sorts of stats while at home. and that's that, have fun!\n");
+
+            Console.WriteLine("Press Enter to go back...");
+            Console.ReadLine();
         }
     }
 }

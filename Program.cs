@@ -22,6 +22,7 @@ namespace AcceptOrDenyGame
 
                 Console.WriteLine("1) New Game");
                 Console.WriteLine("2) Load Game");
+                Console.WriteLine("3) Game Info");
 
 
                 string input = Console.ReadLine();
@@ -33,6 +34,9 @@ namespace AcceptOrDenyGame
                         break;
                     case "2":
                         Logic.LoadGame(bill, player, work);
+                        break;
+                    case "3":
+                        Logic.GameInfo(bill, player, work);
                         break;
                 }
             }
