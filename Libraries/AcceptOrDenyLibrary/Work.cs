@@ -137,8 +137,6 @@ namespace AcceptOrDenyLibrary
 
         public static void Working(Bills bill, Player player, Work work)
         {
-            Logic.SaveGame(bill, player, work);
-
             do
             {
                 Console.Clear();
@@ -269,7 +267,8 @@ namespace AcceptOrDenyLibrary
 
             if (player.Money > 0)
             {
-                Console.WriteLine("You live to work another day... Press Enter to get back to work.");
+                Console.WriteLine("You live to work another day...");
+                Console.WriteLine("Press Enter to get back home.");
                 Console.ReadLine();
                 work.CurrentLineup = Logic.RollRandomNumber(5, 16);
 
@@ -286,7 +285,7 @@ namespace AcceptOrDenyLibrary
 
                 CheckForPromotion(player, work);
 
-                Working(bill, player, work);
+                Player.Home(bill, player, work);
             }
             else
             {

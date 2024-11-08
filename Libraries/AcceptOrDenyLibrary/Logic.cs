@@ -99,6 +99,10 @@ namespace AcceptOrDenyLibrary
                 streamWrite.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(player));
                 streamWrite.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(work));
             }
+
+            Console.WriteLine("Game saved!");
+            Console.WriteLine("Press Enter to contiue.");
+            Console.ReadLine();
         }
 
         public static void LoadGame(Bills bill, Player player, Work work)
